@@ -50,8 +50,12 @@ resource sourceControl 'Microsoft.Web/sites/sourcecontrols@2025-03-01' = {
   name: 'scm-explorer-${env}-${locationLabel}-001'
   parent: site
   properties: {
-    repoUrl: repoUrl
-    branch: 'feat/webapp'
-    isManualIntegration: true
+    isGitHubAction: true
+    gitHubActionConfiguration: {
+      isLinux: true
+      codeConfiguration: {
+        runtimeStack: 
+      }
+    }
   }
 }
