@@ -16,6 +16,9 @@ param location string
 @maxValue(2)
 param subnetCount int = 1
 
+@description('Deploy NAT Gateway')
+param deployNat bool
+
 var locationLabel = take(location, 6)
 var vnetCIDR = '10.0.0.0/16'
 var vnetName = 'vnet-explorer-${env}-${locationLabel}-001'
@@ -41,9 +44,9 @@ var privateSubnets = [
 			networkSecurityGroup: {
 				id: privateNSG.id
 			}
-      natGateway: {
+      natGateway: (deployNat) ? {
         id: natGateway.id
-      }
+      } : null
       defaultOutboundAccess: false
 		}
 	}
@@ -100,7 +103,7 @@ resource privateNSG 'Microsoft.Network/networkSecurityGroups@2025-05-01' = {
     ]
 	}
 }
-resource natGateway 'Microsoft.Network/natGateways@2025-05-01' = {
+resource natGateway 'Microsoft.Network/natGateways@2025-05-01' = if (deployNat) {
 	name: 'ng-explorer-${env}-${locationLabel}-001'
 	location: location
 	properties: {
@@ -115,7 +118,7 @@ resource natGateway 'Microsoft.Network/natGateways@2025-05-01' = {
 	}
 }
 
-resource natPublicIp 'Microsoft.Network/publicIPAddresses@2025-05-01' = {
+resource natPublicIp 'Microsoft.Network/publicIPAddresses@2025-05-01' = if (deployNat) {
 	name: 'pip-explorer-${env}-${locationLabel}-nat-001'
 	location: location
 	properties: {

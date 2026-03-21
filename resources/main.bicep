@@ -14,33 +14,23 @@ module network './network.bicep' = {
 	}
 }
 
-module loadBalancer './loadbalancer.bicep' = {
-	name: 'loadBalancerDeploy'
-	params: {
-		env: env
-		location: location
-	}
+module web './web/main.bicep' = {
+  name: 'webDeploy'
+  params: {
+    env: env
+    location: location
+    vmSubnetId: network.outputs.privateSubnetId
+    vmNSGId: network.outputs.privateNSGId
+    bastionSubnetId: network.outputs.bastionSubnetId
+    sshKeyData: sshKeyData
+  }
 }
 
-module vmss './vmss.bicep' = {
-	name: 'vmDeploy'
-	params: {
-		env: env
-		location: location
-		vmCount: 2
-		vmNSGId: network.outputs.privateNSGId
-		vmSubnetId: network.outputs.privateSubnetId
-		lbBackendPoolId: loadBalancer.outputs.lbBackendPoolId
-		sshKeyData: sshKeyData
-	}
+module app './app/main.bicep' = {
+  name: 'appDeploy'
+  params: {
+    env: env
+    location: location
+    appServicePlanSKU: 'Basic'
+  }
 }
-
-module bastion './bastion.bicep' = {
-	name: 'bastionDeploy'
-	params: {
-		env: env
-		location: location
-		bastionSubnetId: network.outputs.bastionSubnetId
-	}
-}
-
