@@ -5,6 +5,11 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  AZURE_WEBAPP_NAME: app-explorer-dev-westeu-001
+  AZURE_WEBAPP_PACKAGE_PATH: 'resources/app/src'
+
+
 jobs:
   deploy-webapp: 
     runs-on: ubuntu-latest
@@ -19,10 +24,21 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Azure CLI script
-        uses: azure/cli@v2
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          azcliversion: latest
-          inlineScript: |
-            az account show
-            az group list
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          cd ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Deploy WebApp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - name: logout
+        run: |
+          az logout

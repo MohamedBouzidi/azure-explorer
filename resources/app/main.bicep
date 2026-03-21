@@ -54,7 +54,8 @@ resource sourceControl 'Microsoft.Web/sites/sourcecontrols@2025-03-01' = {
     gitHubActionConfiguration: {
       isLinux: true
       codeConfiguration: {
-        runtimeStack: 
+        runtimeStack: 'Python'
+        runtimeVersion: '3.14'
       }
     }
   }
