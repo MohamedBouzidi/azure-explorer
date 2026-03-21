@@ -8,7 +8,7 @@ jobs:
       - name: Azure CLI Login
         uses: azure/login@v2
         with:
-          creds: >
+          creds: >-
             {
               "clientId": "${{ secrets.AZURE_CLIENT_ID }}"
               "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}"
