@@ -26,7 +26,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          cd ${{ env.AZURE_WEBAPP_PACKAGE }}
+          cd ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
           python -m venv antenv
           source antenv/bin/activate
           python -m pip install --upgrade pip
