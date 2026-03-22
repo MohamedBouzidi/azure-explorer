@@ -1,4 +1,4 @@
-name: Run Azure CLI login with OpenID Connect
+name: Build and Deploy Azure WebApp
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
     permissions:
       contents: read # This is required for actions/checkout
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Python
         uses: actions/setup-python@v5
